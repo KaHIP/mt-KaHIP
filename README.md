@@ -85,7 +85,7 @@ mpirun -n 24 ./deploy/kaffpaE ./examples/rgg_n_2_15_s0.graph --k 4  --time_limit
 
 Linking the mt-KaHIP Library 
 =====
-mt-KaHIP also offers libaries and interfaces to link the algorithms directly to your code. We explain the details of the interface in the manual. Below we list an example program that links the kahip library. This example can also  be found in misc/example_library_call/.
+mt-KaHIP also offers libaries and interfaces to link the algorithms directly to your code. We explain the details of the interface in the manual. Below we list an example program that links the kahip library. This example can also  be found in misc/example_library_call/. The program will also be compiled when running the cmake process from above (see CMakeLists.txt file for necessary libraries etc...). 
 
 ```cpp
 #include <iostream>
@@ -114,7 +114,7 @@ int main(int argn, char **argv) {
         int* vwgt        = NULL;
         int* adjcwgt     = NULL;
 
-        mtkahip(&n, vwgt, xadj, adjcwgt, adjncy, &nparts, &imbalance, false, 0, ECO, &num_threads, &edge_cut, part);
+        mtkahip(&n, vwgt, xadj, adjcwgt, adjncy, &nparts, &imbalance, false, 0, ECO, num_threads, &edge_cut, part);
 
         std::cout <<  "edge cut " <<  edge_cut  << std::endl;
 }
