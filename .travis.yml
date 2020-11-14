@@ -15,6 +15,7 @@ addons:
      - numactl 
      - libtbb-dev
      - g++-9
+     - libnuma-dev
         
 
 script: 
