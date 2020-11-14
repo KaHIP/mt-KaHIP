@@ -85,9 +85,9 @@ void internal_mtkahip_call(PartitionConfig & partition_config,
         streambuf* backup = cout.rdbuf();
         ofstream ofs;
         ofs.open("/dev/null");
-        if(suppress_output) {
-               cout.rdbuf(ofs.rdbuf()); 
-        }
+        //if(suppress_output) {
+        cout.rdbuf(ofs.rdbuf()); 
+        //}
 
         partition_config.imbalance = 100*(*imbalance);
         graph_access G;     

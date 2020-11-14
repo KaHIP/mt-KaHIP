@@ -22,6 +22,7 @@ mkdir deploy
 cp ./build/mtkahip deploy/
 cp ./build/evaluator deploy/
 cp ./build/graphchecker deploy/
+cp ./build/interface_test deploy/
 
 cp ./build/libinterfacemtkahip_static.a deploy/libmtkahip.a
 cp ./build/libinterfacemtkahip.so deploy/libmtkahip.so

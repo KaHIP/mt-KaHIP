@@ -673,7 +673,7 @@ EdgeWeight label_propagation_refinement::parallel_label_propagation_with_queue_w
         ALWAYS_ASSERT(!config.combine);
 
         using hash_function_type = parallel::MurmurHash<NodeID>;
-        using hash_value_type = hash_function_type::hash_type;
+        //using hash_value_type = hash_function_type::hash_type;
 
         CLOCK_START_N;
         std::cout << "Num blocks\t" << queue->unsafe_size() << std::endl;
@@ -718,11 +718,11 @@ EdgeWeight label_propagation_refinement::parallel_label_propagation_with_queue_w
                                         NodeWeight max_cluster_size = cluster_sizes[max_block].load(std::memory_order_relaxed);
                                         NodeWeight node_weight = G.getNodeWeight(node);
                                         EdgeWeight max_value = 0;
-                                        hash_value_type max_block_hash = 0;
+                                        //hash_value_type max_block_hash = 0;
                                         for (auto cur_block : neighbor_parts) {
                                                 EdgeWeight cur_value = hash_map[cur_block];
                                                 NodeWeight cur_cluster_size = cluster_sizes[cur_block].load(std::memory_order_relaxed);
-                                                hash_value_type cur_block_hash = 0;
+                                                //hash_value_type cur_block_hash = 0;
 
                                                 if ((cur_value > max_value || (cur_value == max_value && rnd.bit())) &&
                                                     (cur_cluster_size + node_weight < block_upperbound || cur_block == my_block)) {

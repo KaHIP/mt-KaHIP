@@ -219,7 +219,7 @@ int parse_parameters(int argn, char **argv,
 #elif defined MODE_KAFFPA
                 k, imbalance,  
                 preconfiguration, 
-                time_limit, 
+                //time_limit, 
                 //enforce_balance, 
 		//balance_edges,
                 filename_output,

@@ -38,6 +38,12 @@ endif()
 #if(COMPILER_SUPPORTS_CPP1Z)
   #add_definitions(-std=c++1z)
 #endif()
+
+CHECK_CXX_COMPILER_FLAG(-Wno-unused-but-set-variable COMPILER_SUPPORTS_NOUSEDBUTSET)
+if(COMPILER_SUPPORTS_NOUSEDBUTSET)
+  add_definitions(-Wno-unused-but-set-variable)
+endif()
+
 CHECK_CXX_COMPILER_FLAG(-fno-stack-limit COMPILER_SUPPORTS_FNOSTACKLIMITS)
 if(COMPILER_SUPPORTS_FNOSTACKLIMITS)
   add_definitions(-fno-stack-limit)
@@ -213,6 +219,15 @@ add_executable(evaluator app/evaluator.cpp $<TARGET_OBJECTS:libmtkahip>)
 target_compile_definitions(evaluator PRIVATE "-DMODE_EVALUATOR")
 target_link_libraries(evaluator ${OpenMP_CXX_LIBRARIES}  "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
 install(TARGETS evaluator DESTINATION bin)
+
+add_executable(interface_test misc/example_library_call/interface_test.cpp interface/mtkahip_interface.cpp $<TARGET_OBJECTS:libmtkahip> )
+target_include_directories(interface_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/interface)
+target_compile_definitions(interface_test PRIVATE "-DMODE_KAFFPA")
+target_link_libraries(interface_test ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+if(LIB_METIS)
+        target_link_libraries(interface_test ${LIB_METIS})
+endif()
+install(TARGETS interface_test DESTINATION bin)
 
 install(TARGETS interfacemtkahip_static 
         ARCHIVE DESTINATION lib
