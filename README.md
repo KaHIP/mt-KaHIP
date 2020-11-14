@@ -60,14 +60,14 @@ These programs and configurations take a graph and partition it more or less seq
 
 | Use Case | Input |  Programs |
 | ------------ | -------- | -------- |
-| Graph Format || graph_checker  |
+| Graph Format || graphchecker  |
 | Evaluate Partitions || evaluator |
 | Fast Partitioning |  | mtkahip preconfiguration set to socialparallel  |
 | Good Partitioning |  | mtkahip preconfiguration set to multitrysocialparallel  |
 
 #### Example Runs
 ```console
-./deploy/graph_checker ./examples/rgg_n_2_15_s0.graph 
+./deploy/graphchecker ./examples/rgg_n_2_15_s0.graph 
 ```
 
 ```console
