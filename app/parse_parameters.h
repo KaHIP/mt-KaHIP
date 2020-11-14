@@ -102,7 +102,7 @@ int parse_parameters(int argn, char **argv,
 #ifdef MODE_KAFFPAs
         struct arg_rex *preconfiguration                     = arg_rex0(NULL, "preconfiguration", "^(strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration. (Default: eco) [strong|eco|fast|fastsocial|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel]." );
 #else
-        struct arg_rex *preconfiguration                     = arg_rex0(NULL, "preconfiguration", "^(fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration. (Default: strong) [strong|eco|fast|fastsocial|fastsocialmultitry|fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel]." );
+        struct arg_rex *preconfiguration                     = arg_rex1(NULL, "preconfiguration", "^(socialparallel|meshparallel|fastsocialparallel|ecosocialparallel|strongsocialparallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration.  [socialparallel|meshparallel|fastsocialparallel|ecosocialparallel|strongsocialparallel]." );
         //struct arg_rex *preconfiguration                     = arg_rex0(NULL, "preconfiguration", "^(strong|eco|fast|fastsocial|fastsocialmultitry|fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration. (Default: strong) [strong|eco|fast|fastsocial|fastsocialmultitry|fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel]." );
 #endif
 
@@ -220,49 +220,49 @@ int parse_parameters(int argn, char **argv,
                 k, imbalance,  
                 preconfiguration, 
                 time_limit, 
-                enforce_balance, 
-		balance_edges,
+                //enforce_balance, 
+		//balance_edges,
                 filename_output,
                 num_threads,
-                parallel_lp,
-                block_size_unit,
-                parallel_lp_type,
-                block_size,
-                apply_move_strategy,
-                kway_search_stop_rule,
-                chernoff_stop_probability,
-                chernoff_gradient_descent_num_steps,
-                chernoff_gradient_descent_step_size,
-                chernoff_min_step_limit,
-                chernoff_max_step_limit,
-                only_first_level,
+                //parallel_lp,
+                //block_size_unit,
+                //parallel_lp_type,
+                //block_size,
+                //apply_move_strategy,
+                //kway_search_stop_rule,
+                //chernoff_stop_probability,
+                //chernoff_gradient_descent_num_steps,
+                //chernoff_gradient_descent_step_size,
+                //chernoff_min_step_limit,
+                //chernoff_max_step_limit,
+                //only_first_level,
                 input_partition,
-                max_number_of_moves,
-                kway_all_boundary_nodes_refinement,
-                local_multitry_rounds,
-                no_quotient_graph_two_way_refinement,
-                global_multitry_rounds,
-                lp_before_local_search,
-                parallel_initial_partitioning,
-                parallel_coarsening_lp,
-                check_cut,
-                fast_contract_clustering,
-                shuffle_graph,
-                sort_edges,
-                stop_rule,
-                num_vert_stop_factor,
-                stop_mls_global_threshold,
-                stop_mls_local_threshold,
-                common_neighborhood_clustering,
-                use_numa_aware_graph,
-                threads_per_socket,
-                l2_cache_size,
-                l3_cache_size,
-                matching_type,
-                balls_and_bins_ht,
-                remove_edges_in_matching,
-                multitry_kway_global_loop_stopping_rule,
-                multitry_kway_local_loop_stopping_rule,
+                //max_number_of_moves,
+                //kway_all_boundary_nodes_refinement,
+                //local_multitry_rounds,
+                //no_quotient_graph_two_way_refinement,
+                //global_multitry_rounds,
+                //lp_before_local_search,
+                //parallel_initial_partitioning,
+                //parallel_coarsening_lp,
+                //check_cut,
+                //fast_contract_clustering,
+                //shuffle_graph,
+                //sort_edges,
+                //stop_rule,
+                //num_vert_stop_factor,
+                //stop_mls_global_threshold,
+                //stop_mls_local_threshold,
+                //common_neighborhood_clustering,
+                //use_numa_aware_graph,
+                //threads_per_socket,
+                //l2_cache_size,
+                //l3_cache_size,
+                //matching_type,
+                //balls_and_bins_ht,
+                //remove_edges_in_matching,
+                //multitry_kway_global_loop_stopping_rule,
+                //multitry_kway_local_loop_stopping_rule,
 #elif defined MODE_EVALUATOR
                 k,   
                 preconfiguration, 
@@ -385,36 +385,39 @@ int parse_parameters(int argn, char **argv,
                 }
 #else
                 partition_config.configuration = preconfiguration->sval[0];
-                if (strcmp("strong", preconfiguration->sval[0]) == 0) {
-                        cfg.strong(partition_config);
-                } else if (strcmp("eco", preconfiguration->sval[0]) == 0) {
-                        cfg.eco(partition_config);
-                } else if (strcmp("fast", preconfiguration->sval[0]) == 0) {
-                        cfg.fast(partition_config);
-                } else if (strcmp("fastsocial", preconfiguration->sval[0]) == 0) {
-                        cfg.fastsocial(partition_config);
-                } else if (strcmp("fastsocialmultitry", preconfiguration->sval[0]) == 0) {
-                        cfg.fastsocialmultitry(partition_config);
-                } else if (strcmp("fastsocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                if (strcmp("socialparallel", preconfiguration->sval[0]) == 0) {
+                        //cfg.strong(partition_config);
                         cfg.fastsocialmultitry_parallel(partition_config);
-                } else if (strcmp("fastsocialmultitry_parallel_fast", preconfiguration->sval[0]) == 0) {
-                        cfg.fastsocialmultitry_parallel_fast(partition_config);
-                } else if (strcmp("ecosocial", preconfiguration->sval[0]) == 0) {
-                        cfg.ecosocial(partition_config);
-                } else if (strcmp("strongsocial", preconfiguration->sval[0]) == 0) {
-                        cfg.strongsocial(partition_config);
-                } else if (strcmp("strongsocial_parallel", preconfiguration->sval[0]) == 0) {
+                //} else if (strcmp("eco", preconfiguration->sval[0]) == 0) {
+                        //cfg.eco(partition_config);
+                //} else if (strcmp("fast", preconfiguration->sval[0]) == 0) {
+                        //cfg.fast(partition_config);
+                //} else if (strcmp("fastsocial", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastsocial(partition_config);
+                //} else if (strcmp("fastsocialmultitry", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastsocialmultitry(partition_config);
+                //} else if (strcmp("fastsocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastsocialmultitry_parallel(partition_config);
+                //} else if (strcmp("fastsocialmultitry_parallel_fast", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastsocialmultitry_parallel_fast(partition_config);
+                //} else if (strcmp("ecosocial", preconfiguration->sval[0]) == 0) {
+                        //cfg.ecosocial(partition_config);
+                //} else if (strcmp("strongsocial", preconfiguration->sval[0]) == 0) {
+                        //cfg.strongsocial(partition_config);
+                } else if (strcmp("strongsocialparallel", preconfiguration->sval[0]) == 0) {
                         cfg.strongsocial_parallel(partition_config);
-                } else if (strcmp("fastsocial_parallel", preconfiguration->sval[0]) == 0) {
+                } else if (strcmp("fastsocialparallel", preconfiguration->sval[0]) == 0) {
                         cfg.fastsocial_parallel(partition_config);
-                } else if (strcmp("fastmultitry", preconfiguration->sval[0]) == 0) {
-                        cfg.fastmultitry(partition_config);
-                } else if (strcmp("fastmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                } else if (strcmp("meshparallel", preconfiguration->sval[0]) == 0) {
+                //} else if (strcmp("fastmultitry", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastmultitry(partition_config);
+                //} else if (strcmp("fastmultitry_parallel", preconfiguration->sval[0]) == 0) {
                         cfg.fastmultitry_parallel(partition_config);
-                } else if (strcmp("ecosocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                } else if (strcmp("ecosocialparallel", preconfiguration->sval[0]) == 0) {
+                //} else if (strcmp("ecosocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
                         cfg.ecosocialmultitry_parallel(partition_config);
-                } else if (strcmp("ecosocialmultitry_parallel_fast", preconfiguration->sval[0]) == 0) {
-                        cfg.ecosocialmultitry_parallel_fast(partition_config);
+                //} else if (strcmp("ecosocialmultitry_parallel_fast", preconfiguration->sval[0]) == 0) {
+                        //cfg.ecosocialmultitry_parallel_fast(partition_config);
                 } else {
                         fprintf(stderr, "Invalid preconfiguration variant: \"%s\"\n", preconfiguration->sval[0]);
                         exit(0);

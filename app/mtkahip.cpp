@@ -92,18 +92,12 @@ int main(int argn, char **argv) {
                 return 0;
         }
 
-        std::streambuf* backup = std::cout.rdbuf();
-        std::ofstream ofs;
-        ofs.open("/dev/null");
-        if(suppress_output) {
-                std::cout.rdbuf(ofs.rdbuf()); 
-        }
-
-        partition_config.LogDump(stdout);
+                partition_config.LogDump(stdout);
         graph_access G;     
         ALWAYS_ASSERT(partition_config.main_core == 0);
 
         timer t;
+        std::cout <<  "reading graph..."  << std::endl;
         if (!partition_config.shuffle_graph && !partition_config.sort_edges) {
                 graph_io::readGraphWeighted(G, graph_filename);
                 //double avg;
@@ -151,10 +145,10 @@ int main(int argn, char **argv) {
                 } endfor
                 input_partition_cut = qm.edge_cut(G);
         }
-        std::cout << "Blocks\t" << partition_config.k << std::endl;
-        std::cout << "Seed\t" << partition_config.seed << std::endl;
-        std::cout << "MLS stop global threshold\t" << partition_config.stop_mls_global_threshold << std::endl;
-        std::cout << "MLS stop local threshold\t" << partition_config.stop_mls_local_threshold << std::endl;
+        //std::cout << "Blocks\t" << partition_config.k << std::endl;
+        //std::cout << "Seed\t" << partition_config.seed << std::endl;
+        //std::cout << "MLS stop global threshold\t" << partition_config.stop_mls_global_threshold << std::endl;
+        //std::cout << "MLS stop local threshold\t" << partition_config.stop_mls_local_threshold << std::endl;
         srand(partition_config.seed);
         random_functions::setSeed(partition_config.seed);
 
@@ -163,64 +157,71 @@ int main(int argn, char **argv) {
         parallel::g_thread_pool.Resize(partition_config.num_threads - 1);
 
         std::cout <<  "graph has " <<  G.number_of_nodes() <<  " nodes and " <<  G.number_of_edges() <<  " edges"  << std::endl;
-        if (partition_config.label_propagation_refinement) {
-                std::cout << "Algorithm\t" << partition_config.configuration << std::endl;
-                std::cout << "Block size\t" << partition_config.block_size << std::endl;
-        } else {
-                std::cout << "Algorithm\t" << partition_config.configuration + (partition_config.lp_before_local_search ? "_lp" : "") << std::endl;
-        }
-        std::cout << "Num threads\t" << partition_config.num_threads << std::endl;
-        std::cout << "Max number of moves\t" << partition_config.max_number_of_moves << std::endl;
+        //if (partition_config.label_propagation_refinement) {
+                //std::cout << "Algorithm\t" << partition_config.configuration << std::endl;
+                //std::cout << "Block size\t" << partition_config.block_size << std::endl;
+        //} else {
+                //std::cout << "Algorithm\t" << partition_config.configuration + (partition_config.lp_before_local_search ? "_lp" : "") << std::endl;
+        //}
+        //std::cout << "Num threads\t" << partition_config.num_threads << std::endl;
+        //std::cout << "Max number of moves\t" << partition_config.max_number_of_moves << std::endl;
 
-        if (partition_config.kway_all_boundary_nodes_refinement) {
-                std::cout << "Refinement boundary\tall" << std::endl;
-        } else {
-                std::cout << "Refinement boundary\tpair" << std::endl;
-        }
+        //if (partition_config.kway_all_boundary_nodes_refinement) {
+                //std::cout << "Refinement boundary\tall" << std::endl;
+        //} else {
+                //std::cout << "Refinement boundary\tpair" << std::endl;
+        //}
 
-        if (partition_config.quotient_graph_two_way_refinement) {
-                std::cout << "Two way refinement\ttrue" << std::endl;
-        } else {
-                std::cout << "Two way refinement\tfalse" << std::endl;
-        }
+        //if (partition_config.quotient_graph_two_way_refinement) {
+                //std::cout << "Two way refinement\ttrue" << std::endl;
+        //} else {
+                //std::cout << "Two way refinement\tfalse" << std::endl;
+        //}
 
-        switch (partition_config.apply_move_strategy) {
-                case ApplyMoveStrategy::LOCAL_SEARCH:
-                        std::cout << "Move strategy\tlocal search" << std::endl;
-                        break;
-                case ApplyMoveStrategy::GAIN_RECALCULATION:
-                        std::cout << "Move strategy\tgain recalculation" << std::endl;
-                        break;
-                case ApplyMoveStrategy::REACTIVE_VERTICES:
-                        std::cout << "Move strategy\treactivate_vertices" << std::endl;
-                        break;
-                case ApplyMoveStrategy::SKIP:
-                        std::cout << "Move strategy\tskip" << std::endl;
-                        break;
-        }
+        //switch (partition_config.apply_move_strategy) {
+                //case ApplyMoveStrategy::LOCAL_SEARCH:
+                        //std::cout << "Move strategy\tlocal search" << std::endl;
+                        //break;
+                //case ApplyMoveStrategy::GAIN_RECALCULATION:
+                        //std::cout << "Move strategy\tgain recalculation" << std::endl;
+                        //break;
+                //case ApplyMoveStrategy::REACTIVE_VERTICES:
+                        //std::cout << "Move strategy\treactivate_vertices" << std::endl;
+                        //break;
+                //case ApplyMoveStrategy::SKIP:
+                        //std::cout << "Move strategy\tskip" << std::endl;
+                        //break;
+        //}
 
-        switch (partition_config.kway_stop_rule) {
-                case KWayStopRule::KWAY_SIMPLE_STOP_RULE:
-                        std::cout << "Kway stop rule\tsimple" << std::endl;
-                        break;
-                case KWayStopRule::KWAY_ADAPTIVE_STOP_RULE:
-                        std::cout << "Kway stop rule\tadaptive" << std::endl;
-                        break;
-                case KWayStopRule::KWAY_CHERNOFF_ADAPTIVE_STOP_RULE:
-                        std::cout << "Kway stop rule\t" << kway_chernoff_adaptive_stop_rule::get_algo_name() << std::endl;
-                        std::cout << "Stop probability\t" << partition_config.chernoff_stop_probability << std::endl;
-                        std::cout << "Num gradient descent step\t" << partition_config.chernoff_gradient_descent_num_steps << std::endl;
-                        std::cout << "Gradient descent step size\t" << partition_config.chernoff_gradient_descent_step_size << std::endl;
-                        std::cout << "Min num step limit\t" << partition_config.chernoff_min_step_limit << std::endl;
-                        std::cout << "Max num step limit\t" << partition_config.chernoff_max_step_limit << std::endl;
-                        break;
-        }
+        //switch (partition_config.kway_stop_rule) {
+                //case KWayStopRule::KWAY_SIMPLE_STOP_RULE:
+                        //std::cout << "Kway stop rule\tsimple" << std::endl;
+                        //break;
+                //case KWayStopRule::KWAY_ADAPTIVE_STOP_RULE:
+                        //std::cout << "Kway stop rule\tadaptive" << std::endl;
+                        //break;
+                //case KWayStopRule::KWAY_CHERNOFF_ADAPTIVE_STOP_RULE:
+                        //std::cout << "Kway stop rule\t" << kway_chernoff_adaptive_stop_rule::get_algo_name() << std::endl;
+                        //std::cout << "Stop probability\t" << partition_config.chernoff_stop_probability << std::endl;
+                        //std::cout << "Num gradient descent step\t" << partition_config.chernoff_gradient_descent_num_steps << std::endl;
+                        //std::cout << "Gradient descent step size\t" << partition_config.chernoff_gradient_descent_step_size << std::endl;
+                        //std::cout << "Min num step limit\t" << partition_config.chernoff_min_step_limit << std::endl;
+                        //std::cout << "Max num step limit\t" << partition_config.chernoff_max_step_limit << std::endl;
+                        //break;
+        //}
 
         // ***************************** perform partitioning ***************************************       
         t.restart();
         graph_partitioner partitioner;
 
         std::cout <<  "performing partitioning!"  << std::endl;
+
+        std::streambuf* backup = std::cout.rdbuf();
+        std::ofstream ofs;
+        ofs.open("/dev/null");
+        std::cout.rdbuf(ofs.rdbuf()); 
+
+
         if(partition_config.time_limit == 0) {
                 partitioner.perform_partitioning(partition_config, G);
         } else {
@@ -243,20 +244,10 @@ int main(int argn, char **argv) {
                 } endfor
         }
 
-        if( partition_config.kaffpa_perfectly_balance ) {
-                double epsilon                         = partition_config.imbalance/100.0;
-                partition_config.upper_bound_partition = (1+epsilon)*ceil(partition_config.largest_graph_weight/(double)partition_config.k);
-
-                complete_boundary boundary(&G);
-                boundary.build();
-
-                cycle_refinement cr;
-                cr.perform_refinement(partition_config, G, boundary);
-        }
         // ******************************* done partitioning *****************************************       
         ofs.close();
         std::cout.rdbuf(backup);
-        std::cout << "imbalance\t" << partition_config.imbalance / 100.0 << std::endl;
+        //std::cout << "imbalance\t" << partition_config.imbalance / 100.0 << std::endl;
         std::cout <<  "time spent for partitioning " << t.elapsed()  << std::endl;
        
         // output some information about the partition that we have computed
@@ -266,86 +257,86 @@ int main(int argn, char **argv) {
                 std::cout << "input partition cut\t" << input_partition_cut << std::endl;
                 std::cout << "improvement\t" << input_partition_cut - cut << std::endl;
         }
-        std::cout << "finalobjective  " << qm.edge_cut(G)                 << std::endl;
-        std::cout << "bnd \t\t"         << qm.boundary_nodes(G)           << std::endl;
+        //std::cout << "finalobjective  " << qm.edge_cut(G)                 << std::endl;
+        //std::cout << "bnd \t\t"         << qm.boundary_nodes(G)           << std::endl;
         std::cout << "balance \t"       << qm.balance(G)                  << std::endl;
-        std::cout << "max_comm_vol \t"  << qm.max_communication_volume(G) << std::endl;
+        //std::cout << "max_comm_vol \t"  << qm.max_communication_volume(G) << std::endl;
 
-        if (!partition_config.label_propagation_refinement) {
-                std::cout << "Two way refinement:" << std::endl;
-                quotient_graph_refinement::print_full_statistics();
-                std::cout << std::endl;
+        //if (!partition_config.label_propagation_refinement) {
+                //std::cout << "Two way refinement:" << std::endl;
+                //quotient_graph_refinement::print_full_statistics();
+                //std::cout << std::endl;
 
-                std::cout << "Local search statistics:" << std::endl;
-                if (partition_config.parallel_multitry_kway) {
-                        parallel::multitry_kway_fm::print_full_statistics();
-                        if (partition_config.input_partition != "") {
-                                ALWAYS_ASSERT(
-                                        parallel::multitry_kway_fm::get_performed_gain() == input_partition_cut - cut);
-                        }
-                } else {
-                        multitry_kway_fm::print_full_statistics();
-                }
-                std::cout << std::endl;
-        }
+                //std::cout << "Local search statistics:" << std::endl;
+                //if (partition_config.parallel_multitry_kway) {
+                        //parallel::multitry_kway_fm::print_full_statistics();
+                        //if (partition_config.input_partition != "") {
+                                //ALWAYS_ASSERT(
+                                        //parallel::multitry_kway_fm::get_performed_gain() == input_partition_cut - cut);
+                        //}
+                //} else {
+                        //multitry_kway_fm::print_full_statistics();
+                //}
+                //std::cout << std::endl;
+        //}
 
 #ifdef PERFORMANCE_STATISTICS
         parallel::thread_data_refinement_core::nodes_partitions_hash_table::print_statistics();
 #endif
 
-#ifdef OUTPUT_GLOBAL_STAT
-        kway_adaptive_stop_rule::dump_statistics();
-        kway_chernoff_adaptive_stop_rule::dump_statistics();
+//#ifdef OUTPUT_GLOBAL_STAT
+        //kway_adaptive_stop_rule::dump_statistics();
+        //kway_chernoff_adaptive_stop_rule::dump_statistics();
 
-        uint32_t ca_g_better = 0;
-        int ca_g_better_val = 0;
+        //uint32_t ca_g_better = 0;
+        //int ca_g_better_val = 0;
 
-        uint32_t a_g_better = 0;
-        int a_g_better_val = 0;
+        //uint32_t a_g_better = 0;
+        //int a_g_better_val = 0;
 
-        uint32_t ca_m_better = 0;
-        uint32_t ca_m_better_val = 0;
+        //uint32_t ca_m_better = 0;
+        //uint32_t ca_m_better_val = 0;
 
-        uint32_t a_m_better = 0;
-        uint32_t a_m_better_val = 0;
+        //uint32_t a_m_better = 0;
+        //uint32_t a_m_better_val = 0;
 
-        uint32_t equal = 0;
+        //uint32_t equal = 0;
 
-        for (size_t i = 0; i < kway_adaptive_stop_rule::m_stat_movements.size(); ++i) {
-                uint32_t ca_m = kway_chernoff_adaptive_stop_rule::m_stat_movements[i];
-                int ca_g = kway_chernoff_adaptive_stop_rule::m_stat_gains[i];
+        //for (size_t i = 0; i < kway_adaptive_stop_rule::m_stat_movements.size(); ++i) {
+                //uint32_t ca_m = kway_chernoff_adaptive_stop_rule::m_stat_movements[i];
+                //int ca_g = kway_chernoff_adaptive_stop_rule::m_stat_gains[i];
 
-                uint32_t a_m = kway_adaptive_stop_rule::m_stat_movements[i];
-                int a_g = kway_adaptive_stop_rule::m_stat_gains[i];
+                //uint32_t a_m = kway_adaptive_stop_rule::m_stat_movements[i];
+                //int a_g = kway_adaptive_stop_rule::m_stat_gains[i];
 
-                if (a_g > ca_g) {
-                    ++a_g_better;
-                    a_g_better_val += a_g - ca_g;
-                }
-                if (a_g < ca_g) {
-                    ++ca_g_better;
-                    ca_g_better_val += ca_g - a_g;
-                }
-                if (a_g == ca_g) {
-                    if (a_m < ca_m) {
-                        ++a_m_better;
-                        a_m_better_val += ca_m - a_m;
-                    }
-                    if (a_m > ca_m) {
-                        ++ca_m_better;
-                        ca_m_better_val += a_m - ca_m;
-                    }
-                    if (a_m == ca_m)
-                        ++equal;
-                }
-        }
+                //if (a_g > ca_g) {
+                    //++a_g_better;
+                    //a_g_better_val += a_g - ca_g;
+                //}
+                //if (a_g < ca_g) {
+                    //++ca_g_better;
+                    //ca_g_better_val += ca_g - a_g;
+                //}
+                //if (a_g == ca_g) {
+                    //if (a_m < ca_m) {
+                        //++a_m_better;
+                        //a_m_better_val += ca_m - a_m;
+                    //}
+                    //if (a_m > ca_m) {
+                        //++ca_m_better;
+                        //ca_m_better_val += a_m - ca_m;
+                    //}
+                    //if (a_m == ca_m)
+                        //++equal;
+                //}
+        //}
 
-        std::cout << "Chernoff better by gain\t" << ca_g_better << "\ton\t" << ca_g_better_val << std::endl;
-        std::cout << "Adaptive better by gain\t" << a_g_better << "\ton\t" << a_g_better_val << std::endl;
-        std::cout << "Chernoff better by movement\t" << ca_m_better << "\ton\t" << ca_m_better_val << std::endl;
-        std::cout << "Adaptive better by movement\t" << a_m_better << "\ton\t" << a_m_better_val << std::endl;
-        std::cout << "Equal\t" << equal << std::endl;
-#endif
+        //std::cout << "Chernoff better by gain\t" << ca_g_better << "\ton\t" << ca_g_better_val << std::endl;
+        //std::cout << "Adaptive better by gain\t" << a_g_better << "\ton\t" << a_g_better_val << std::endl;
+        //std::cout << "Chernoff better by movement\t" << ca_m_better << "\ton\t" << ca_m_better_val << std::endl;
+        //std::cout << "Adaptive better by movement\t" << a_m_better << "\ton\t" << a_m_better_val << std::endl;
+        //std::cout << "Equal\t" << equal << std::endl;
+//#endif
         // write the partition to the disc
         if (!partition_config.filename_output.empty()) {
                 graph_io::writePartition(G, partition_config.filename_output);
