@@ -26,10 +26,11 @@ You can download mt-KaHIP with the following command line:
 git clone https://github.com/KaHIP/mt-KaHIP
 ```
 
-## Compiling KaHIP: 
+## Compiling mt-KaHIP: 
 Before you can start you need to install the following software packages:
 - TBB (https://www.threadingbuildingblocks.org/) 
 - OpenMP
+- CMake
 
 Once you installed the packages, just type 
 ```console
@@ -61,26 +62,16 @@ These programs and configurations take a graph and partition it more or less seq
 | ------------ | -------- | -------- |
 | Graph Format || graph_checker  |
 | Evaluate Partitions || evaluator |
-| Fast Partitioning | Meshes | kaffpa preconfiguration set to fast  |
-| Good Partitioning | Meshes | kaffpa preconfiguration set to eco  |
-| Very Good Partitioning | Meshes | kaffpa preconfiguration set to strong |
-| Highest Quality | Meshes | kaffpaE, use mpirun, large time limit  |
-| Fast Partitioning | Social | kaffpa preconfiguration set to fsocial  |
-| Good Partitioning | Social  | kaffpa preconfiguration set to esocial  |
-| Very Good Partitioning | Social | kaffpa preconfiguration set to ssocial |
-| Highest Quality | Social | kaffpaE, use mpirun, large time limit, preconfiguration ssocial  |
-| Even Higher Quality || kaffpaE, use mpirun, large time limit, use the options --mh_enable_tabu_search, --mh_enable_kabapE  |
+| Fast Partitioning |  | mtkahip preconfiguration set to socialparallel  |
+| Good Partitioning |  | mtkahip preconfiguration set to multitrysocialparallel  |
+
 #### Example Runs
 ```console
 ./deploy/graph_checker ./examples/rgg_n_2_15_s0.graph 
 ```
 
 ```console
-./deploy/kaffpa ./examples/rgg_n_2_15_s0.graph --k 4  --preconfiguration=strong
-```
-
-```console
-mpirun -n 24 ./deploy/kaffpaE ./examples/rgg_n_2_15_s0.graph --k 4  --time_limit=3600 --mh_enable_tabu_search --mh_enable_kabapE 
+./deploy/mtkahip ./examples/rgg_n_2_15_s0.graph --k 4  --preconfiguration=socialparallel --num_threads=4
 ```
 
 Linking the mt-KaHIP Library 
@@ -145,32 +136,10 @@ If you publish results using our algorithms, please acknowledge our work by quot
 }
 ```
 
-Project Contributors (sorted by last name)
+mt-KaHIP Project Contributors (sorted by last name)
 =====
 Yaroslav Akhremtsev
 
-Roland Glantz
- 
-Alexandra Henzinger 
-
-Dennis Luxen
-
-Henning Meyerhenke
-
-Alexander Noe
-
-Wolfgang Ost
-
-Ilya Safro
-
 Peter Sanders
 
-Sebastian Schlag
-
 Christian Schulz
-
-Daniel Seemaier
-
-Darren Strash
-
-Jesper Larsson Träff
