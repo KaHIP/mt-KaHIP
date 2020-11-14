@@ -1,2 +1,2 @@
-file /home/c_schulz/sandbox/mt-KaHIP/SConstruct,line 98:
+file /home/c_schulz/sandbox/release/mt-KaHIP/SConstruct,line 98:
 	Configure(confdir = .sconf_temp)

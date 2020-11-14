@@ -127,11 +127,11 @@ libkaffpa_parallel_async  = ['lib/parallel_mh/parallel_mh_async.cpp',
 if env['program'] == 'kaffpa':
         env.Append(CXXFLAGS = '-DMODE_KAFFPA -DCPP11THREADS -D_REENTRANT -U_OPENMP -Wno-unused-function')
         env.Append(CCFLAGS  = '-DMODE_KAFFPA')
-        env.Program('kaffpa', ['app/kaffpa.cpp']+libkaffpa_files, LIBS=['tbb', 'tbbmalloc', 'tbbmalloc_proxy', 'libargtable2', 'pthread', 'dl', 'atomic', 'dl', 'numa', 'omp'])
+        env.Program('kaffpa', ['app/kaffpa.cpp']+libkaffpa_files, LIBS=['tbb', 'tbbmalloc', 'tbbmalloc_proxy', 'libargtable2', 'pthread', 'dl', 'atomic', 'dl', 'numa', 'gomp'])
 if env['program'] == 'kaffpa_test':
         env.Append(CXXFLAGS = '-DMODE_KAFFPA -DCPP11THREADS')
         env.Append(CCFLAGS  = '-DMODE_KAFFPA')
-        env.Program('kaffpa_test', ['app/kaffpa.cpp']+libkaffpa_files, LIBS=['tbb', 'tbbmalloc', 'tbbmalloc_proxy', 'libargtable2', 'pthread', 'dl', 'atomic', 'dl', 'numa', 'omp'])
+        env.Program('kaffpa_test', ['app/kaffpa.cpp']+libkaffpa_files, LIBS=['tbb', 'tbbmalloc', 'tbbmalloc_proxy', 'libargtable2', 'pthread', 'dl', 'atomic', 'dl', 'numa', 'gomp'])
 if env['program'] == 'kaffpa_compare_with_sequential':
         env.Append(CXXFLAGS = '-DMODE_KAFFPA -DCOMPARE_WITH_SEQUENTIAL_KAHIP -DKAFFPAOUTPUT -DCPP11THREADS')
         env.Append(CCFLAGS  = '-DMODE_KAFFPA -DCOMPARE_WITH_SEQUENTIAL_KAHIP -DKAFFPAOUTPUT')
