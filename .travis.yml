@@ -5,7 +5,7 @@ addons:
     packages: 
       - numactl
       - libtbb-dev
-      - g++-9
+      - g++-8
       - libnuma-dev
     sources: 
       - sourceline: "ppa:ubuntu-toolchain-r/test"
@@ -14,7 +14,7 @@ before_script:
 matrix: 
   include: 
     env: 
-      - "MATRIX_EVAL=\"CC=gcc-9 && CXX=g++-9\""
+      - "MATRIX_EVAL=\"CC=gcc-8 && CXX=g++-8\""
 
 before_install:
     - eval "${MATRIX_EVAL}"
