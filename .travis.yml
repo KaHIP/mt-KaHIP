@@ -1,23 +1,20 @@
-matrix:
-   include:
-        - os: linux
-        addons:
-          apt:    
-            sources: 
-             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            packages:
-             - numactl 
-             - libtbb-dev
-             - g++-9
-             - libnuma-dev
-        env:
-         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
-
-before_script:
-  - sudo apt-get -qq update
- 
+addons: 
+  apt: 
+    packages: 
+      - numactl
+      - libtbb-dev
+      - g++-9
+      - libnuma-dev
+    sources: 
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+before_script: 
+  - "sudo apt-get -qq update"
+matrix: 
+  include: 
+    env: 
+      - "MATRIX_EVAL=\"CC=gcc-9 && CXX=g++-9\""
 script: 
-  - mkdir build
-  - cd build 
-  - cmake ../ 
-  - make  
+  - "mkdir build"
+  - "cd build"
+  - "cmake ../"
+  - make
