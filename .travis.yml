@@ -6,7 +6,14 @@ compiler:
 
 before_script:
   - sudo apt-get -qq update
-  - sudo apt-get install numactl 
+ 
+addons:
+  apt:    
+    packages:
+     - numactl 
+     - tbb
+     - g++-7 
+        
 
 script: 
   - mkdir build
