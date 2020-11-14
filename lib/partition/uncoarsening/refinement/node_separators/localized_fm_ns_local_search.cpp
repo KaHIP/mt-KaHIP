@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #include <algorithm>
 #include "localized_fm_ns_local_search.h"

@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #include <fstream>
 #include "initial_node_separator.h"

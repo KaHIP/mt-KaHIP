@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #include "data_structure/priority_queues/maxNodeHeap.h"
 #include "greedy_ns_local_search.h"
