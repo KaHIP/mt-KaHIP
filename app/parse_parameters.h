@@ -102,7 +102,7 @@ int parse_parameters(int argn, char **argv,
 #ifdef MODE_KAFFPAs
         struct arg_rex *preconfiguration                     = arg_rex0(NULL, "preconfiguration", "^(strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration. (Default: eco) [strong|eco|fast|fastsocial|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel]." );
 #else
-        struct arg_rex *preconfiguration                     = arg_rex1(NULL, "preconfiguration", "^(socialparallel|meshparallel|fastsocialparallel|ecosocialparallel|strongsocialparallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration.  [socialparallel|meshparallel|fastsocialparallel|ecosocialparallel|strongsocialparallel]." );
+        struct arg_rex *preconfiguration                     = arg_rex1(NULL, "preconfiguration", "^(multitrysocialparallel|socialparallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration.  [multitrysocialparallel|socialparallel]." );
         //struct arg_rex *preconfiguration                     = arg_rex0(NULL, "preconfiguration", "^(strong|eco|fast|fastsocial|fastsocialmultitry|fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel)$", "VARIANT", REG_EXTENDED, "Use a preconfiguration. (Default: strong) [strong|eco|fast|fastsocial|fastsocialmultitry|fastsocialmultitry_parallel|fastsocialmultitry_parallel_fast|ecosocialmultitry_parallel|ecosocialmultitry_parallel_fast|ecosocial|strongsocial|strongsocial_parallel|fastsocial_parallel|fastmultitry|fastmultitry_parallel]." );
 #endif
 
@@ -385,7 +385,7 @@ int parse_parameters(int argn, char **argv,
                 }
 #else
                 partition_config.configuration = preconfiguration->sval[0];
-                if (strcmp("socialparallel", preconfiguration->sval[0]) == 0) {
+                if (strcmp("multitrysocialparallel", preconfiguration->sval[0]) == 0) {
                         //cfg.strong(partition_config);
                         cfg.fastsocialmultitry_parallel(partition_config);
                 //} else if (strcmp("eco", preconfiguration->sval[0]) == 0) {
@@ -404,18 +404,18 @@ int parse_parameters(int argn, char **argv,
                         //cfg.ecosocial(partition_config);
                 //} else if (strcmp("strongsocial", preconfiguration->sval[0]) == 0) {
                         //cfg.strongsocial(partition_config);
-                } else if (strcmp("strongsocialparallel", preconfiguration->sval[0]) == 0) {
-                        cfg.strongsocial_parallel(partition_config);
-                } else if (strcmp("fastsocialparallel", preconfiguration->sval[0]) == 0) {
+                //} else if (strcmp("strongsocialparallel", preconfiguration->sval[0]) == 0) {
+                        //cfg.strongsocial_parallel(partition_config);
+                } else if (strcmp("socialparallel", preconfiguration->sval[0]) == 0) {
                         cfg.fastsocial_parallel(partition_config);
-                } else if (strcmp("meshparallel", preconfiguration->sval[0]) == 0) {
-                //} else if (strcmp("fastmultitry", preconfiguration->sval[0]) == 0) {
-                        //cfg.fastmultitry(partition_config);
-                //} else if (strcmp("fastmultitry_parallel", preconfiguration->sval[0]) == 0) {
-                        cfg.fastmultitry_parallel(partition_config);
-                } else if (strcmp("ecosocialparallel", preconfiguration->sval[0]) == 0) {
-                //} else if (strcmp("ecosocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
-                        cfg.ecosocialmultitry_parallel(partition_config);
+                //} else if (strcmp("meshparallel", preconfiguration->sval[0]) == 0) {
+                ////} else if (strcmp("fastmultitry", preconfiguration->sval[0]) == 0) {
+                        ////cfg.fastmultitry(partition_config);
+                ////} else if (strcmp("fastmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                        //cfg.fastmultitry_parallel(partition_config);
+                //} else if (strcmp("ecosocialparallel", preconfiguration->sval[0]) == 0) {
+                ////} else if (strcmp("ecosocialmultitry_parallel", preconfiguration->sval[0]) == 0) {
+                        //cfg.ecosocialmultitry_parallel(partition_config);
                 //} else if (strcmp("ecosocialmultitry_parallel_fast", preconfiguration->sval[0]) == 0) {
                         //cfg.ecosocialmultitry_parallel_fast(partition_config);
                 } else {
@@ -1087,6 +1087,9 @@ int parse_parameters(int argn, char **argv,
                                 partition_config.num_threads);
                         exit(0);
                 }
+        } else {
+                partition_config.num_threads = omp_get_num_procs();
+                std::cout <<  "setting num threads to " <<  partition_config.num_threads << std::endl;
         }
 
         if (parallel_lp->count > 0) {
