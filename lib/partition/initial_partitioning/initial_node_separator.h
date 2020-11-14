@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #ifndef INITIAL_NODE_SEPARATOR_VR5EPEO6
 #define INITIAL_NODE_SEPARATOR_VR5EPEO6

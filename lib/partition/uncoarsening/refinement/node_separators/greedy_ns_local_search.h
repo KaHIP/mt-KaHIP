@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #ifndef GREEDY_NS_LOCAL_SEARCH_P9KLE4NH
 #define GREEDY_NS_LOCAL_SEARCH_P9KLE4NH

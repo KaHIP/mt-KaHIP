@@ -1,7 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
-
 #ifndef AREA_BFS_OD13WIZM
 #define AREA_BFS_OD13WIZM
 

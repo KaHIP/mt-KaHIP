@@ -1,6 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
 
 #ifndef LOCALIZED_FM_NS_LOCAL_SEARCH_PY14MVLH
 #define LOCALIZED_FM_NS_LOCAL_SEARCH_PY14MVLH

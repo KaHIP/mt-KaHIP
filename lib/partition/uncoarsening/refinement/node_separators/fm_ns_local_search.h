@@ -1,7 +1,3 @@
-//
-// Author: Christian Schulz <christian.schulz@kit.edu>
-// 
-
 #ifndef FM_NS_LOCAL_SEARCH_P621XWW8
 #define FM_NS_LOCAL_SEARCH_P621XWW8
 
