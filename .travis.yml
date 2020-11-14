@@ -6,6 +6,7 @@ compiler:
 
 before_script:
   - sudo apt-get -qq update
+  - sudo apt-get install numactl 
 
 script: 
   - mkdir build
