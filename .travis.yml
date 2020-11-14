@@ -9,10 +9,12 @@ before_script:
  
 addons:
   apt:    
+    sources: 
+     - sourceline: 'ppa:ubuntu-toolchain-r/test'
     packages:
      - numactl 
      - libtbb-dev
-     - gcc-9
+     - g++-9
         
 
 script: 
