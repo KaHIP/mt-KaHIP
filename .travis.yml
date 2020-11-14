@@ -1,25 +1,23 @@
-language: cpp
-
-compiler:
-  - g++-9
-  - clang 
+matrix:
+   include:
+        - os: linux
+        addons:
+          apt:    
+            sources: 
+             - sourceline: 'ppa:ubuntu-toolchain-r/test'
+            packages:
+             - numactl 
+             - libtbb-dev
+             - g++-9
+             - libnuma-dev
+        env:
+         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
 
 before_script:
   - sudo apt-get -qq update
  
-addons:
-  apt:    
-    sources: 
-     - sourceline: 'ppa:ubuntu-toolchain-r/test'
-    packages:
-     - numactl 
-     - libtbb-dev
-     - g++-9
-     - libnuma-dev
-        
-
 script: 
   - mkdir build
   - cd build 
-  - cmake ../ -D CMAKE_CXX_COMPILER="g++-9"
+  - cmake ../ 
   - make  
