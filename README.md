@@ -110,13 +110,14 @@ int main(int argn, char **argv) {
         int* part        = new int[n];
         int edge_cut     = 0;
         int nparts       = 2;
-        int num_threads  = 4;
+        int numthreads   = 4;
         int* vwgt        = NULL;
         int* adjcwgt     = NULL;
 
-        mtkahip(&n, vwgt, xadj, adjcwgt, adjncy, &nparts, &imbalance, false, 0, ECO, num_threads, &edge_cut, part);
+        mtkahip(&n, vwgt, xadj, adjcwgt, adjncy, &nparts, &imbalance, false, 0, FASTSOCIALMULTITRY_PARALLEL, numthreads, & edge_cut, part);
 
         std::cout <<  "edge cut " <<  edge_cut  << std::endl;
+                
 }
 ```
 
