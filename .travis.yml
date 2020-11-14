@@ -11,8 +11,8 @@ addons:
   apt:    
     packages:
      - numactl 
-     - tbb
-     - g++-7 
+     - libtbb-dev
+     - gcc-9
         
 
 script: 
