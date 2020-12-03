@@ -542,7 +542,7 @@ public:
         {
                 m_ht_handles.reserve(m_config.num_threads);
                 for (size_t thread_id = 0; thread_id < m_config.num_threads; ++thread_id) {
-                        m_ht_handles.emplace_back(m_boundary.getHandle());
+                        m_ht_handles.emplace_back(m_boundary.get_handle());
                 }
         }
 
@@ -571,7 +571,7 @@ public:
                         }
 
                         if (target_block == from) {
-                                ht_handle.insertOrUpdate(target, 1, [](size_t& lhs) {
+                                ht_handle.insert_or_update(target, 1, [](size_t& lhs) {
                                         return lhs += 1;
                                 });
                         }
@@ -584,7 +584,7 @@ public:
                 if (external_neighbors == 0) {
                         ht_handle.erase(vertex);
                 } else {
-                        ht_handle.insertOrUpdate(vertex, external_neighbors, [](size_t& lhs, const size_t& rhs) {
+                        ht_handle.insert_or_update(vertex, external_neighbors, [](size_t& lhs, const size_t& rhs) {
                                 return lhs = rhs;
                         }, external_neighbors);
                 }

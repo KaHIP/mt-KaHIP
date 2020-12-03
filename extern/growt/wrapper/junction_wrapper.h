@@ -71,7 +71,7 @@ public:
     using iterator           = StupidIterator<key_type, mapped_type>;
     using insert_return_type = std::pair<iterator, bool>;
 
-    JunctionHandle() = default;
+    JunctionHandle() = delete;
     JunctionHandle(HashType& hash_table) : hash(hash_table), count(0)
     {
         //std::lock_guard<std::mutex> lock(registration_mutex);
@@ -88,7 +88,13 @@ public:
     JunctionHandle& operator=(const JunctionHandle&) = delete;
 
     JunctionHandle(JunctionHandle&& rhs) = default;
-    JunctionHandle& operator=(JunctionHandle&& rhs) = default;
+    JunctionHandle& operator=(JunctionHandle&& rhs)
+    {
+        if (&rhs == this) return *this;
+        this->~JunctionHandle();
+        new (this) JunctionHandle(std::move(rhs));
+        return *this;
+    }
 
     inline iterator find              (const key_type& k)
     {
@@ -157,7 +163,7 @@ public:
     }
 
     template<class F, class ... Types>
-    inline insert_return_type insertOrUpdate(const key_type& k, const mapped_type& d, F f, Types&& ... args)
+    inline insert_return_type insert_or_update(const key_type& k, const mapped_type& d, F f, Types&& ... args)
     {
         //static_assert(F::junction_compatible::value, //TJuncComp<F>::value,
         //              "Used update function is not Junction compatible!");
@@ -196,9 +202,9 @@ public:
     }
 
     template<class F, class ... Types>
-    inline insert_return_type insertOrUpdate_unsafe(const key_type& k, const mapped_type& d, F f, Types&& ... args)
+    inline insert_return_type insert_or_update_unsafe(const key_type& k, const mapped_type& d, F f, Types&& ... args)
     {
-        return insertOrUpdate(k,d,f,std::forward<Types>(args)...);
+        return insert_or_update(k,d,f,std::forward<Types>(args)...);
     }
 
     inline size_t erase(const key_type& k)
@@ -241,7 +247,8 @@ public:
     JunctionWrapper& operator=(const JunctionWrapper&) = delete;
     JunctionWrapper(JunctionWrapper&& rhs) = default;
     JunctionWrapper& operator=(JunctionWrapper&& rhs) = default;
-    Handle getHandle() {   return Handle(*hash);   }
+
+    Handle get_handle() {   return Handle(*hash);   }
 
 private:
     std::unique_ptr<HashType> hash;
