@@ -31,6 +31,7 @@ Before you can start you need to install the following software packages:
 - TBB (https://www.threadingbuildingblocks.org/) 
 - OpenMP
 - CMake
+- GCC != 10.1 (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94087#c16)
 
 Once you installed the packages, just type 
 ```console
