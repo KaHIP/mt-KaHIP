@@ -8,7 +8,7 @@
 static std::mutex time_mutex;
 #define SYNC std::lock_guard<std::mutex> guard(time_mutex)
 
-#define TIME
+//#define TIME
 
 #if defined(TIME)
 
@@ -44,10 +44,10 @@ std::chrono::duration<double>(CLOCK - __begin).count()
 << std::endl;} while (false)
 
 #else
-#define CLOCK
-#define CLOCK_START
-#define CLOCK_END(mes)
-#define CLOCK_END_TIME
-#define CLOCK_START_N
-#define CLOCK_END_N(mes)
+#define CLOCK 0
+#define CLOCK_START ((void) 0)
+#define CLOCK_END(mes) ((void) 0)
+#define CLOCK_END_TIME 0
+#define CLOCK_START_N ((void) 0)
+#define CLOCK_END_N(mes) ((void) 0)
 #endif
