@@ -184,7 +184,7 @@ void contraction::parallel_fast_contract_clustering(const PartitionConfig& parti
         std::cout << "block_size\t" << block_size << std::endl;
 
         auto task = [&](uint32_t id) {
-                auto handle = new_edges.getHandle();
+                auto handle = new_edges.get_handle();
                 std::vector<NodeWeight> my_block_infos(no_of_coarse_vertices);
                 NodeID begin = offset.fetch_add(block_size, std::memory_order_relaxed);
                 while (begin < G.number_of_nodes()) {
@@ -204,7 +204,7 @@ void contraction::parallel_fast_contract_clustering(const PartitionConfig& parti
                                                 uint64_t key = get_uint64_from_pair_unsorted(source_cluster,
                                                                                              target_cluster);
 
-                                                handle.insertOrUpdate(key, edge_weight,
+                                                handle.insert_or_update(key, edge_weight,
                                                                       [](size_t& lhs, const size_t& rhs) {
                                                                               return lhs += rhs;
                                                                       },
@@ -233,7 +233,7 @@ void contraction::parallel_fast_contract_clustering(const PartitionConfig& parti
         std::vector<parallel::AtomicWrapper<EdgeID>> offsets(no_of_coarse_vertices);
         offset.store(0, std::memory_order_relaxed);
         auto task1 = [&](uint32_t thread_id) {
-                auto handle = new_edges.getHandle();
+                auto handle = new_edges.get_handle();
                 size_t size = handle.capacity();
                 const EdgeID block_size = std::max<EdgeID>(sqrt(size), 1000);
                 EdgeID begin = offset.fetch_add(block_size, std::memory_order_relaxed);
@@ -281,7 +281,7 @@ void contraction::parallel_fast_contract_clustering(const PartitionConfig& parti
         std::vector<Edge> edges(num_edges);
         offset.store(0, std::memory_order_relaxed);
         auto task2 = [&](uint32_t thread_id) {
-                auto handle = new_edges.getHandle();
+	        auto handle = new_edges.get_handle();
                 size_t size = handle.capacity();
                 const EdgeID block_size = std::max<EdgeID>(sqrt(size), 1000);
                 EdgeID begin = offset.fetch_add(block_size, std::memory_order_relaxed);
@@ -341,7 +341,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
                 std::vector<concurrent_ht_type::Handle> handles;
                 handles.reserve(num_threads);
                 for (size_t i = 0; i < num_threads; ++i) {
-                        handles.push_back(new_edges[i].getHandle());
+                        handles.push_back(new_edges[i].get_handle());
                 }
                 std::vector<NodeWeight> my_block_infos(no_of_coarse_vertices);
                 std::vector<std::vector<std::pair<uint64_t, EdgeWeight>>> buffers(num_threads);
@@ -354,7 +354,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
                         for (const auto& elem : buffer) {
                                 uint64_t key = elem.first;
                                 EdgeWeight edge_weight = elem.second;
-                                handle.insertOrUpdate(key, edge_weight,
+                                handle.insert_or_update(key, edge_weight,
                                                       [](size_t& lhs, const size_t& rhs) {
                                                               return lhs += rhs;
                                                       },
@@ -406,7 +406,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
                 std::vector<concurrent_ht_type::Handle> handles;
                 handles.reserve(num_threads);
                 for (size_t i = 0; i < num_threads; ++i) {
-                        handles.push_back(new_edges[i].getHandle());
+                        handles.push_back(new_edges[i].get_handle());
                 }
                 std::vector<NodeWeight> my_block_infos(no_of_coarse_vertices);
 
@@ -433,7 +433,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
                                                         handle_ptr = &handles[source_cluster % num_threads];
                                                 }
 
-                                                handle_ptr->insertOrUpdate(key, edge_weight,
+                                                handle_ptr->insert_or_update(key, edge_weight,
                                                                            [](size_t& lhs, const size_t& rhs) {
                                                                                    return lhs += rhs;
                                                                            }, edge_weight);
@@ -464,7 +464,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
         CLOCK_START_N;
         std::vector<EdgeID> offsets(no_of_coarse_vertices);
         auto task1 = [&](uint32_t thread_id) {
-                auto handle = new_edges[thread_id].getHandle();
+                auto handle = new_edges[thread_id].get_handle();
                 EdgeID num_edges = 0;
                 for (auto it = handle.begin(); it != handle.end(); ++it) {
                         std::pair<NodeID, NodeID> edge = get_pair_from_uint64((*it).first);
@@ -502,7 +502,7 @@ void contraction::parallel_fast_contract_clustering_multiple_threads_balls_and_b
         CLOCK_START_N;
         std::vector<Edge> edges(num_edges);
         auto task2 = [&](uint32_t thread_id) {
-                auto handle = new_edges[thread_id].getHandle();
+                auto handle = new_edges[thread_id].get_handle();
                 for (auto it = handle.begin(); it != handle.end(); ++it) {
                         std::pair < NodeID, NodeID > edge = get_pair_from_uint64((*it).first);
                         auto edge_weight = (*it).second;

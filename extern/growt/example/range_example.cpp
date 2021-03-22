@@ -3,15 +3,14 @@
 #include <random>
 #include <cmath>
 
-#define MURMUR2
-#include "utils/hashfct.h"
-
-#include "utils/alignedallocator.h"
+#include "utils/hash/murmur2_hash.h"
+#include "allocator/alignedallocator.h"
+using murmur2_hash = utils_tm::hash_tm::murmur2_hash;
 
 //////////////////////////////////////////////////////////////
 // USING definitions.h (possibly slower compilation)
 #include "data-structures/definitions.h"
-using Table_t = growt::uaGrow<murmur2_hasher, growt::AlignedAllocator<> >;
+using Table_t = growt::uaGrow<murmur2_hash, growt::AlignedAllocator<> >;
 
 static std::atomic_size_t aggregator_static {0};
 static std::atomic_size_t aggregator_dynamic{0};
@@ -20,7 +19,7 @@ static std::atomic_size_t aggregator_dynamic{0};
 void insertions(Table_t& table, size_t id, size_t n)
 {
     // obtain a handle
-    auto handle = table.getHandle();
+    auto handle = table.get_handle();
 
     auto start = 1+(id*n); // do not insert 0!
     auto end   = (1+id)*n;
@@ -39,7 +38,7 @@ void insertions(Table_t& table, size_t id, size_t n)
 void static_load(Table_t& table, size_t id, size_t p)
 {
     // obtain a handle
-    auto   handle = table.getHandle();
+    auto   handle = table.get_handle();
 
     size_t work_load       = std::ceil(double(handle.capacity()) / double(p));
     // the last range might be smaller (iff p does not divide capacity evenly)
@@ -60,7 +59,7 @@ void static_load(Table_t& table, size_t id, size_t p)
 void dynamic_blockwise_load(Table_t& table, size_t block_size)
 {
     // obtain a handle
-    auto   handle = table.getHandle();
+    auto   handle = table.get_handle();
 
     size_t capacity   = handle.capacity();
 

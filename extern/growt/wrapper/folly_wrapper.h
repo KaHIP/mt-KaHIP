@@ -38,8 +38,16 @@ public:
     using const_iterator     = typename HashType::const_iterator;
     using insert_return_type = std::pair<iterator, bool>;
 
+    static constexpr size_t next_cap(size_t i)
+    {
+	    size_t curr = 4096;
+	    while (curr<i) curr<<=1;
+	    return curr << 1;
+    }
+    
     FollyWrapper() = default;
-    FollyWrapper(size_t capacity_) : hash(capacity_), capacity(capacity_) {}
+    FollyWrapper(size_t capacity_) 
+	    : hash(next_cap(capacity_)), capacity(next_cap(capacity_)) {}
     FollyWrapper(const FollyWrapper&) = delete;
     FollyWrapper& operator=(const FollyWrapper&) = delete;
 
@@ -58,7 +66,7 @@ public:
 
 
     using Handle = FollyWrapper&;
-    Handle getHandle() { return *this; }
+    Handle get_handle() { return *this; }
 
 
     inline iterator find(const key_type& k)
@@ -89,7 +97,7 @@ public:
     }
 
     template<class F, class ... Types>
-    inline insert_return_type insertOrUpdate(const key_type& k, const mapped_type& d, F f, Types&& ... args)
+    inline insert_return_type insert_or_update(const key_type& k, const mapped_type& d, F f, Types&& ... args)
     {
         auto ret = hash.insert(std::make_pair(k,d));
         if (! ret.second)
@@ -106,9 +114,9 @@ public:
     }
 
     template<class F, class ... Types>
-    inline insert_return_type insertOrUpdate_unsafe(const key_type& k, const mapped_type& d, F f, Types&& ... args)
+    inline insert_return_type insert_or_update_unsafe(const key_type& k, const mapped_type& d, F f, Types&& ... args)
     {
-        return insertOrUpdate(k,d,f, std::forward<Types>(args)...);
+        return insert_or_update(k,d,f, std::forward<Types>(args)...);
     }
 
     inline size_t erase(const key_type& k)
