@@ -69,10 +69,7 @@ if(COMPILER_SUPPORTS_NOSIGNCOMP)
   add_definitions(-Wno-sign-compare)
 endif()
 
-
 add_definitions(-DCPP11THREADS -D_REENTRANT -U_OPENMP -Wno-unused-function -O3 -DNDEBUG -funroll-loops -std=c++1z -DMODE_KAFFPA -DPOINTER64=1 -DGIT_DESC=\"942944c\" )
-
-
 
 # check dependencies
 find_package(OpenMP REQUIRED)
@@ -84,8 +81,6 @@ endif()
   #add_definitions(${TBB_CXX_FLAGS})
 #endif()
 
-
-
 # 64 Bit option
 option(64BITMODE "64 bit mode" OFF)
 if(64BITMODE)
@@ -93,26 +88,11 @@ if(64BITMODE)
   add_definitions("-DPOINTER64=1")
 endif()
 
-
 # optimized output
 option(OPTIMIZED_OUTPUT "optimized output" OFF)
 if(OPTIMIZED_OUTPUT)
   add_definitions("-DKAFFPAOUTPUT")
 endif()
-
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/app)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/argtable3-3.0.3)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/io)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/partition)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/partition/uncoarsening/refinement/quotient_graph_refinement/flow_refinement)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/tools)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/growt/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/ips4o)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/extern/stats/include)
-
 
 set(LIBKAFFPA_SOURCE_FILES
   lib/data_structure/graph_hierarchy.cpp
@@ -184,46 +164,64 @@ set(LIBKAFFPA_SOURCE_FILES
   lib/partition/uncoarsening/refinement/parallel_kway_graph_refinement/kway_graph_refinement_core.cpp
   lib/partition/uncoarsening/parallel_uncoarsening.cpp
   extern/argtable3-3.0.3/argtable3.c)
+
 add_library(libmtkahip OBJECT ${LIBKAFFPA_SOURCE_FILES})
 
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/app)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/extern/argtable3-3.0.3)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/io)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/partition)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/partition/uncoarsening/refinement/quotient_graph_refinement/flow_refinement)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/tools)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/extern/growt/)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/extern/ips4o)
+target_include_directories(libmtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/extern/stats/include)
+
+find_path(NUMA_INCLUDE_DIR numa.h)
+find_library(NUMA_LIBRARY numa REQUIRED)
+
+target_include_directories(libmtkahip PUBLIC ${NUMA_INCLUDE_DIR})
+target_link_libraries(libmtkahip PUBLIC ${NUMA_LIBRARY} ${OpenMP_CXX_LIBRARIES})
 
 # generate targets for each binary
-add_executable(mtkahip app/mtkahip.cpp $<TARGET_OBJECTS:libmtkahip>)
+add_executable(mtkahip app/mtkahip.cpp)
 target_compile_definitions(mtkahip PRIVATE "-DMODE_KAFFPA")
-target_link_libraries(mtkahip ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(mtkahip PRIVATE libmtkahip "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 install(TARGETS mtkahip DESTINATION bin)
 
 # Shared interface library
-add_library(interfacemtkahip SHARED interface/mtkahip_interface.cpp $<TARGET_OBJECTS:libmtkahip>)
+add_library(interfacemtkahip SHARED interface/mtkahip_interface.cpp)
 target_include_directories(interfacemtkahip PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/interface)
 target_compile_definitions(interfacemtkahip PRIVATE "-DMODE_KAFFPA")
-target_link_libraries(interfacemtkahip PUBLIC ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(interfacemtkahip PUBLIC libmtkahip ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 if(LIB_METIS)
         target_link_libraries(interface PUBLIC ${LIB_METIS})
 endif()
 install(TARGETS interfacemtkahip DESTINATION lib)
 
 # Static interface library
-add_library(interfacemtkahip_static interface/mtkahip_interface.cpp $<TARGET_OBJECTS:libmtkahip>)
+add_library(interfacemtkahip_static interface/mtkahip_interface.cpp)
 target_include_directories(interfacemtkahip_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/interface)
 target_compile_definitions(interfacemtkahip_static PRIVATE "-DMODE_KAFFPA")
-target_link_libraries(interfacemtkahip_static PUBLIC ${OpenMP_CXX_LIBRARIES}  "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(interfacemtkahip_static PUBLIC libmtkahip ${OpenMP_CXX_LIBRARIES}  "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 set_target_properties(interfacemtkahip_static PROPERTIES PUBLIC_HEADER interface/mtkahip_interface.h)
 
-add_executable(graphchecker app/graphchecker.cpp $<TARGET_OBJECTS:libmtkahip>)
+add_executable(graphchecker app/graphchecker.cpp)
 target_compile_definitions(graphchecker PRIVATE "-DMODE_GRAPHCHECKER"  )
-target_link_libraries(graphchecker ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(graphchecker libmtkahip ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 install(TARGETS graphchecker DESTINATION bin)
 
-add_executable(evaluator app/evaluator.cpp $<TARGET_OBJECTS:libmtkahip>)
+add_executable(evaluator app/evaluator.cpp)
 target_compile_definitions(evaluator PRIVATE "-DMODE_EVALUATOR")
-target_link_libraries(evaluator ${OpenMP_CXX_LIBRARIES}  "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(evaluator ${OpenMP_CXX_LIBRARIES} libmtkahip "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 install(TARGETS evaluator DESTINATION bin)
 
-add_executable(interface_test misc/example_library_call/interface_test.cpp interface/mtkahip_interface.cpp $<TARGET_OBJECTS:libmtkahip> )
+add_executable(interface_test misc/example_library_call/interface_test.cpp interface/mtkahip_interface.cpp)
 target_include_directories(interface_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/interface)
 target_compile_definitions(interface_test PRIVATE "-DMODE_KAFFPA")
-target_link_libraries(interface_test ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl" "numa")
+target_link_libraries(interface_test libmtkahip ${OpenMP_CXX_LIBRARIES} "tbb" "tbbmalloc" "tbbmalloc_proxy" "atomic" "dl")
 if(LIB_METIS)
         target_link_libraries(interface_test ${LIB_METIS})
 endif()
