@@ -11,6 +11,7 @@
 #include <limits>
 #include <queue>
 #include <vector>
+#include <cstdint>
 
 #include "limits.h"
 #include "macros_assertions.h"
