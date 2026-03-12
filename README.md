@@ -4,7 +4,7 @@ mt-KaHIP v1.00  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b4dc
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FKaHIP%2Fmt-KaHIP.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FKaHIP%2Fmt-KaHIP?ref=badge_shield)
 =====
 
-The graph partitioning framework mt-KaHIP -- Multi-Threaded Karlsruhe High Quality Partitioning.
+The graph partitioning framework mt-KaHIP -- Multi-Threaded Karlsruhe High Quality Partitioning.  Part of the [KaHIP](https://github.com/KaHIP) organization. 
 
 The graph partitioning problem asks for a division of a graph's node set into k equally sized blocks such that the number of edges that run between the blocks is minimized. KaHIP is a family of graph partitioning programs. Here, we separately release the shared-memory parallel multilevel version of KaHIP which is due to Yaroslav Akhremtsev. Here is an overview of KaHIP:
 
