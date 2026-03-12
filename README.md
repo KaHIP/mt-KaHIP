@@ -14,9 +14,6 @@ The graph partitioning problem asks for a division of a graph's node set into k 
   width="601" height="558">
 </p>
 
-## Main project site:
-https://kahip.github.io
-
 Installation Notes
 =====
 ## Downloading mt-KaHIP: 
